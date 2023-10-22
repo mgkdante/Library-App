@@ -3,6 +3,7 @@ const content = document.querySelector('.book-list')
 const addButton = document.querySelector('.add-button')
 const closeButton = document.querySelector('.close-button')
 const bookForm = document.querySelector('.book-form')
+const bookList = document.querySelector('.book-list')
 
 function Book(title, author, pages, read) {
     this.title = title;
@@ -16,13 +17,6 @@ const addBookToLibrary = (title, author, pages, read) => {
 }
 
 const createBookCard = (book) => {
-    const table = document.createElement('table')
-    const headerRow = document.createElement('tr')
-    const titleHeader = document.createElement('th')
-    const authorHeader = document.createElement('th')
-    const pagesHeader = document.createElement('th')
-    const readHeader = document.createElement('th')
-    const deleteHeader = document.createElement('th')
     const row = document.createElement('tr')
     const title = document.createElement('td')
     const author = document.createElement('td')
@@ -30,28 +24,13 @@ const createBookCard = (book) => {
     const read = document.createElement('td')
     const deleteButton = document.createElement('button')
 
-    titleHeader.textContent = 'Title'
-    authorHeader.textContent = 'Author'
-    pagesHeader.textContent = 'Pages'
-    readHeader.textContent = 'Read'
-    deleteHeader.textContent = 'Delete'
-
     title.classList.add('book-title')
     author.classList.add('book-author')
     pages.classList.add('book-pages')
     read.classList.add('book-read')
     deleteButton.classList.add('delete-button')
 
-    content.appendChild(table)
-
-    table.appendChild(headerRow)
-    headerRow.appendChild(titleHeader)
-    headerRow.appendChild(authorHeader)
-    headerRow.appendChild(pagesHeader)
-    headerRow.appendChild(readHeader)
-    headerRow.appendChild(deleteHeader)
-
-    table.appendChild(row)
+    bookList.appendChild(row)
 
     row.appendChild(title)
     row.appendChild(author)
@@ -70,10 +49,10 @@ const createBookCard = (book) => {
         if (index > -1) {
             myLibrary.splice(index, 1)
         }
-        content.removeChild(table)
+        displayBooks(); // Update the display
     })
 
-    return table
+    return row
 }
 
 addButton.addEventListener('click', () => {
@@ -104,8 +83,9 @@ bookForm.addEventListener('submit', callbackFunction)
 
 
 const displayBooks = () => {
+    bookList.innerHTML = ''; // Clear the content element
     myLibrary.forEach(book => {
-        content.appendChild(createBookCard(book));
+        bookList.appendChild(createBookCard(book));
     });
 }
 
