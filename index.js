@@ -4,12 +4,16 @@ const addButton = document.querySelector('.add-button')
 const closeButton = document.querySelector('.close-button')
 const bookForm = document.querySelector('.book-form')
 const bookList = document.querySelector('.book-list')
+const table = document.createElement('table');
+bookList.appendChild(table);
 
-function Book(title, author, pages, read) {
-    this.title = title;
+class Book {
+    constructor(title, author, pages, read){
+    this.title = title
     this.author = author
     this.pages = pages
     this.read = read
+    }
 }
 
 const addBookToLibrary = (title, author, pages, read) => {
@@ -30,7 +34,7 @@ const createBookCard = (book) => {
     read.classList.add('book-read')
     deleteButton.classList.add('delete-button')
 
-    bookList.appendChild(row)
+    table.appendChild(row);
 
     row.appendChild(title)
     row.appendChild(author)
@@ -83,9 +87,9 @@ bookForm.addEventListener('submit', callbackFunction)
 
 
 const displayBooks = () => {
-    bookList.innerHTML = ''; // Clear the content element
+    table.innerHTML = ''; // Clear the content element
     myLibrary.forEach(book => {
-        bookList.appendChild(createBookCard(book));
+        createBookCard(book);
     });
 }
 
