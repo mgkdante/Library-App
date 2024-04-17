@@ -1,100 +1,87 @@
-const myLibrary = [];
-const content = document.querySelector('.book-list')
-const addButton = document.querySelector('.add-button')
-const closeButton = document.querySelector('.close-button')
-const bookForm = document.querySelector('.book-form')
-const bookList = document.querySelector('.book-list')
-const table = document.createElement('table');
-bookList.appendChild(table);
+const openDialog = document.getElementById("add-book")
 
-class Book {
-    constructor(title, author, pages, read){
+const dialog = document.getElementById("form-dialog")
+
+const titleEntry = document.getElementById("book-name")
+const authorEntry = document.getElementById("author")
+const pagesEntry = document.getElementById("pages")
+const readEntry = document.getElementById("read")
+const submitEntry = document.getElementById("form-submit")
+
+const bookList = document.getElementById('book-list')
+
+const myLibrary = []
+
+bookList.style.display = "none"
+
+
+function Book(title, author, pages, read) {
     this.title = title
     this.author = author
     this.pages = pages
     this.read = read
+}
+
+const addBookToLibrary = (book) => {
+    myLibrary.push(book)
+}
+
+openDialog.addEventListener("click", function () {
+    dialog.showModal()
+})
+
+dialog.addEventListener('click', (event) => {
+    if (event.target.id === 'form-dialog') {
+        dialog.close();
     }
-}
-
-const addBookToLibrary = (title, author, pages, read) => {
-    myLibrary.push(new Book(title, author, pages, read))
-}
-
-const createBookCard = (book) => {
-    const row = document.createElement('tr')
-    const title = document.createElement('td')
-    const author = document.createElement('td')
-    const pages = document.createElement('td')
-    const read = document.createElement('td')
-    const deleteButton = document.createElement('button')
-
-    title.classList.add('book-title')
-    author.classList.add('book-author')
-    pages.classList.add('book-pages')
-    read.classList.add('book-read')
-    deleteButton.classList.add('delete-button')
-
-    table.appendChild(row);
-
-    row.appendChild(title)
-    row.appendChild(author)
-    row.appendChild(pages)
-    row.appendChild(read)
-    row.appendChild(deleteButton)
-
-    title.textContent = book.title
-    author.textContent = book.author
-    pages.textContent = book.pages
-    read.textContent = book.read
-    deleteButton.textContent = 'Delete'
-
-    deleteButton.addEventListener('click', () => {
-        const index = myLibrary.indexOf(book)
-        if (index > -1) {
-            myLibrary.splice(index, 1)
-        }
-        displayBooks(); // Update the display
-    })
-
-    return row
-}
-
-addButton.addEventListener('click', () => {
-    document.querySelector('.book-form').style.display = 'block'
 })
 
-closeButton.addEventListener('click', () => {
-    document.querySelector('.book-form').style.display = 'none'
-})
+submitEntry.addEventListener('click', (event) => {
+    event.preventDefault();
+    bookList.style.display = "grid"
+    dialog.close();
+    const bookToAdd = new Book(titleEntry.value, authorEntry.value, pagesEntry.value, readEntry.checked);
+    addBookToLibrary(bookToAdd);
+    titleEntry.value = '';
+    authorEntry.value = '';
+    pagesEntry.value = '';
+    readEntry.checked = false;
+    bookList.innerHTML = ''; // Clear the list before adding new books
+
+    for (let book of myLibrary) { // Use 'of' to get the book objects
+        const bookCard = document.createElement("div");
+        bookCard.classList.add("book-card");
+
+        const cardTitle = document.createElement('h2');
+        cardTitle.textContent = book.title;
+
+        const cardAuthor = document.createElement('p');
+        cardAuthor.textContent = `by: ${book.author}`;
+
+        const cardPages = document.createElement('p');
+        cardPages.textContent = `pages: ${book.pages}`;
+
+        const cardCheckbox = document.createElement("div");
+        const cardCheckboxLabel = document.createElement('label');
+        cardCheckboxLabel.setAttribute("for", "read-book");
+        cardCheckboxLabel.textContent = 'read: ';
+
+        const cardCheckboxInput = document.createElement('input'); // Should be 'input', not 'label'
+        cardCheckboxInput.setAttribute("type", "checkbox");
+        cardCheckboxInput.setAttribute("id", "read-book");
+        cardCheckboxInput.setAttribute("name", "book_name");
+        cardCheckboxInput.checked = book.read; // Set the checked state based on the book object
+
+        cardCheckbox.appendChild(cardCheckboxLabel);
+        cardCheckbox.appendChild(cardCheckboxInput);
+
+        bookCard.appendChild(cardTitle);
+        bookCard.appendChild(cardAuthor);
+        bookCard.appendChild(cardPages);
+        bookCard.appendChild(cardCheckbox);
+
+        bookList.appendChild(bookCard); // Append the book card to the book list
+    }
+});
 
 
-const callbackFunction = (e) => {
-    e.preventDefault();
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const pages = document.getElementById('pages').value;
-    const read = document.getElementById('read').checked;
-
-    addBookToLibrary(title, author, pages, read);
-    loadingFrom();
-    displayBooks(); // Update the display
-
-    const form = document.querySelector('.form-container');
-    form.reset(); // Reset form input values
-}
-
-bookForm.addEventListener('submit', callbackFunction)
-
-
-const displayBooks = () => {
-    table.innerHTML = ''; // Clear the content element
-    myLibrary.forEach(book => {
-        createBookCard(book);
-    });
-}
-
-const loadingFrom = () => {
-    document.querySelector('.book-form').style.display = 'none'
-}
-
-loadingFrom();
