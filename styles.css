@@ -80,10 +80,12 @@ main {
 
 header {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 4rem;
+    padding: 4rem;
     flex: 1;
+    gap: 2rem;
 }
 
 #book-list {
@@ -98,18 +100,21 @@ header {
     padding: 4rem;
     margin: 4rem;
     overflow: auto;
-    background: white;
+    background: url("bg.jpeg") no-repeat center / cover;
 }
 
 .book-card {
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    box-shadow: 2px 2px 5px grey;
+    box-shadow: 5px 5px 5px black;
     border-radius: 8px;
     border-left: var(--primary-color) 4px solid;
     height: 250px;
     justify-content: center;
+    background: white;
+    text-wrap: wrap;
+    overflow: auto;
 }
 
 #form-dialog {
@@ -176,7 +181,7 @@ input:focus {
     outline: none;
 }
 
-.book-card > * {
+.book-card > :not(button) {
     display: flex;
     flex-direction: row;
     gap: 1rem;
