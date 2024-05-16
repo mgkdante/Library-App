@@ -1,8 +1,10 @@
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
+class Book {
+    constructor(title, author, pages, read){
+        this.title = title
+        this.author = author
+        this.pages = pages
+        this.read = read
+    }
 }
 
 const elements = {
@@ -80,17 +82,25 @@ const createCard = (book) => {
     elements.bookList.appendChild(bookCard);
 }
 
+
+
 elements.submitEntry.addEventListener('click', (event) => {
-    event.preventDefault();
-    elements.dialog.close();
-    const bookToAdd = new Book(elements.titleEntry.value, elements.authorEntry.value, elements.pagesEntry.value, elements.readEntry.checked);
-    addBookToLibrary(bookToAdd);
-    elements.titleEntry.value = '';
-    elements.authorEntry.value = '';
-    elements.pagesEntry.value = '';
-    elements.readEntry.checked = false;
-    elements.bookList.innerHTML = '';
-    displayBooks();
+       if(!elements.authorEntry.checkValidity()
+    && !elements.pagesEntry.checkValidity() && !elements.titleEntry.checkValidity()){
+        elements.submitEntry.setCustomValidity('Please fill all fields')
+    }
+    else {
+           event.preventDefault();
+           elements.dialog.close();
+           const bookToAdd = new Book(elements.titleEntry.value, elements.authorEntry.value, elements.pagesEntry.value, elements.readEntry.checked);
+           addBookToLibrary(bookToAdd);
+           elements.titleEntry.value = '';
+           elements.authorEntry.value = '';
+           elements.pagesEntry.value = '';
+           elements.readEntry.checked = false;
+           elements.bookList.innerHTML = '';
+           displayBooks();
+       }
 });
 
 displayBooks();
